@@ -1,0 +1,42 @@
+name: Deploy Model
+
+on:
+  workflow_dispatch:  # Allows the workflow to be triggered manually
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Train and save the model
+      run: |
+        python scripts/train_model.py
+
+    - name: Deploy model
+      run: |
+        # Commands to deploy your model
+        # This could include copying files to a server, starting a service, etc.
+        echo "Deployment step (replace with actual deployment commands)"
+
+    - name: Save logs
+      run: |
+        mkdir -p logs
+        cp service.log logs/
+    - name: Upload logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: service-log
+        path: logs/service.log
